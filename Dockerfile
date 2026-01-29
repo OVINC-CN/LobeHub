@@ -15,6 +15,15 @@ if [ "${USE_CN_MIRROR:-false}" = "true" ]; then
 fi
 apt update
 apt install ca-certificates proxychains-ng -qy
+
+######################################################################
+# Install @napi-rs/canvas build dependencies and runtime libraries
+apt install -qy \
+    libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev librsvg2-dev \
+    libcairo2 libjpeg62-turbo libpango-1.0-0 libpangocairo-1.0-0 libgif7 librsvg2-2 \
+    libfontconfig1 libfreetype6 libpixman-1-0 libpng16-16 libharfbuzz0b libfribidi0
+######################################################################
+
 mkdir -p /distroless/bin /distroless/etc /distroless/etc/ssl/certs /distroless/lib
 cp /usr/lib/$(arch)-linux-gnu/libproxychains.so.4 /distroless/lib/libproxychains.so.4
 cp /usr/lib/$(arch)-linux-gnu/libdl.so.2 /distroless/lib/libdl.so.2
@@ -24,6 +33,49 @@ cp /usr/lib/$(arch)-linux-gnu/libstdc++.so.6 /distroless/lib/libstdc++.so.6
 cp /usr/lib/$(arch)-linux-gnu/libgcc_s.so.1 /distroless/lib/libgcc_s.so.1
 cp /usr/local/bin/node /distroless/bin/node
 cp /etc/ssl/certs/ca-certificates.crt /distroless/etc/ssl/certs/ca-certificates.crt
+
+######################################################################
+# Copy @napi-rs/canvas runtime libraries to distroless
+ARCH=$(arch)
+cp -a /usr/lib/${ARCH}-linux-gnu/librt.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libcairo.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libjpeg.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libpango*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libgif.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/librsvg*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libfontconfig.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libfreetype.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libpixman*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libpng*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libharfbuzz.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libfribidi.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libgobject*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libglib*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libgio*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libgdk_pixbuf*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libxml2.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libz.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libexpat.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libbz2.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libbrotli*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libgraphite2.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libpcre2*.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libmount.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libblkid.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libffi.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libthai.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libdatrie.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libicuuc.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/libicudata.so* /distroless/lib/ 2>/dev/null || true
+cp -a /usr/lib/${ARCH}-linux-gnu/liblzma.so* /distroless/lib/ 2>/dev/null || true
+# Copy fontconfig configuration
+mkdir -p /distroless/etc/fonts
+cp -a /etc/fonts/* /distroless/etc/fonts/ 2>/dev/null || true
+# Copy basic fonts
+mkdir -p /distroless/usr/share/fonts
+cp -a /usr/share/fonts/* /distroless/usr/share/fonts/ 2>/dev/null || true
+######################################################################
+
 rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 EOF
 
@@ -92,7 +144,7 @@ pnpm i
 mkdir -p /deps
 cd /deps
 pnpm init
-pnpm add pg drizzle-orm
+pnpm add pg drizzle-orm @napi-rs/canvas
 EOF
 
 COPY . .
@@ -133,6 +185,7 @@ COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
 COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 COPY --from=builder /deps/node_modules/pg /app/node_modules/pg
 COPY --from=builder /deps/node_modules/drizzle-orm /app/node_modules/drizzle-orm
+COPY --from=builder /deps/node_modules/@napi-rs /app/node_modules/@napi-rs
 
 # Copy server launcher and shared scripts
 COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
