@@ -31,7 +31,7 @@ RUN <<'EOF'
 set -ex
 
 ## Install @napi-rs/canvas build dependencies and runtime libraries ##
-RUN apt install -qy \
+apt install -qy \
     libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev librsvg2-dev \
     libcairo2 libjpeg62-turbo libpango-1.0-0 libpangocairo-1.0-0 libgif7 librsvg2-2 \
     libfontconfig1 libfreetype6 libpixman-1-0 libpng16-16 libharfbuzz0b libfribidi0
