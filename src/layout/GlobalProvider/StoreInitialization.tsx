@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { useCodeBlockCopyFix } from '@/hooks/useCodeBlockCopyFix';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { useAiInfraStore } from '@/store/aiInfra';
@@ -22,6 +23,9 @@ import { useUserStateRedirect } from './useUserStateRedirect';
 const StoreInitialization = memo(() => {
   // prefetch error ns to avoid don't show error content correctly
   useTranslation('error');
+
+  // 修复代码块复制时换行丢失的问题
+  useCodeBlockCopyFix();
 
   const [isLogin, useInitUserState] = useUserStore((s) => [
     authSelectors.isLogin(s),
