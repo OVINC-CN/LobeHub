@@ -258,33 +258,12 @@ export const agentGroupRouter = router({
       }
     }),
 
-  /**
-   * Get agent group detail by identifier
-   * GET /market/agent-group/:identifier
-   */
-  getAgentGroupDetail: agentGroupProcedure
-    .input(z.object({ identifier: z.string() }))
-    .query(async ({ input, ctx }) => {
-      log('getAgentGroupDetail input: %O', input);
-
-      try {
-        const response = await ctx.marketSDK.agentGroups.getAgentGroupDetail(input.identifier);
-        return response;
-      } catch (error) {
-        log('Error getting agent group detail: %O', error);
-        throw new TRPCError({
-          cause: error,
-          code: 'INTERNAL_SERVER_ERROR',
-          message: error instanceof Error ? error.message : 'Failed to get agent group detail',
-        });
-      }
-    }),
-
+  
   /**
    * Fork an agent group
    * POST /market/agent-group/:identifier/fork
    */
-  forkAgentGroup: agentGroupProcedure
+forkAgentGroup: agentGroupProcedure
     .input(
       z.object({
         identifier: z.string(),
@@ -353,6 +332,29 @@ export const agentGroupRouter = router({
           cause: error,
           code: 'INTERNAL_SERVER_ERROR',
           message: error instanceof Error ? error.message : 'Failed to fork agent group',
+        });
+      }
+    }),
+
+  
+  /**
+   * Get agent group detail by identifier
+   * GET /market/agent-group/:identifier
+   */
+getAgentGroupDetail: agentGroupProcedure
+    .input(z.object({ identifier: z.string() }))
+    .query(async ({ input, ctx }) => {
+      log('getAgentGroupDetail input: %O', input);
+
+      try {
+        const response = await ctx.marketSDK.agentGroups.getAgentGroupDetail(input.identifier);
+        return response;
+      } catch (error) {
+        log('Error getting agent group detail: %O', error);
+        throw new TRPCError({
+          cause: error,
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to get agent group detail',
         });
       }
     }),

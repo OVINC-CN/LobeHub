@@ -8,9 +8,10 @@ import { useTranslation } from 'react-i18next';
 
 import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
-import { type SessionGroupItem } from '@/types/session';
 
 import GroupItem from './GroupItem';
+
+type GroupSortItem = { id: string; name: string; sort: number | null };
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
@@ -52,10 +53,10 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
       <Flexbox>
         <SortableList
           items={sessionGroupItems}
-          onChange={(items: SessionGroupItem[]) => {
+          onChange={(items: GroupSortItem[]) => {
             updateGroupSort(items);
           }}
-          renderItem={(item: SessionGroupItem) => (
+          renderItem={(item: GroupSortItem) => (
             <SortableList.Item
               align={'center'}
               className={styles.container}

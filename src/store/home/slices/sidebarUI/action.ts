@@ -9,7 +9,6 @@ import { homeService } from '@/services/home';
 import { sessionService } from '@/services/session';
 import { getAgentStoreState } from '@/store/agent';
 import type { HomeStore } from '@/store/home/store';
-import { type SessionGroupItem } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('sidebarUI');
@@ -65,7 +64,7 @@ export interface SidebarUIAction {
   /**
    * Update group sort order
    */
-  updateGroupSort: (items: SessionGroupItem[]) => Promise<void>;
+  updateGroupSort: (items: { id: string }[]) => Promise<void>;
 
   // ========== UI State Actions ==========
   /**
