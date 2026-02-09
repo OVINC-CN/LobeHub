@@ -51,10 +51,17 @@ describe('S3StaticFileImpl', () => {
       expect(await fileService.getFullFileUrl(undefined)).toBe('');
     });
 
-    it('当S3_SET_ACL为false时应返回预签名URL', async () => {
-      config.S3_SET_ACL = false;
+    it('当S3_PUBLIC_DOMAIN未配置时应返回预签名URL', async () => {
+      config.S3_PUBLIC_DOMAIN = '';
       const url = 'path/to/file.jpg';
       expect(await fileService.getFullFileUrl(url)).toBe('https://presigned.example.com/test.jpg');
+      config.S3_PUBLIC_DOMAIN = 'https://example.com';
+    });
+
+    it('当S3_SET_ACL为false但S3_PUBLIC_DOMAIN已配置时应返回公共域名URL', async () => {
+      config.S3_SET_ACL = false;
+      const url = 'path/to/file.jpg';
+      expect(await fileService.getFullFileUrl(url)).toBe('https://example.com/path/to/file.jpg');
       config.S3_SET_ACL = true;
     });
 
@@ -74,8 +81,8 @@ describe('S3StaticFileImpl', () => {
 
     // Legacy bug compatibility tests - https://github.com/lobehub/lobe-chat/issues/8994
     describe('legacy bug compatibility', () => {
-      it('should handle full URL input by extracting key (S3_SET_ACL=false)', async () => {
-        config.S3_SET_ACL = false;
+      it('should handle full URL input by extracting key (S3_PUBLIC_DOMAIN not set)', async () => {
+        config.S3_PUBLIC_DOMAIN = '';
         const fullUrl = 'https://s3.example.com/bucket/path/to/file.jpg?X-Amz-Signature=expired';
 
         // Mock getKeyFromFullUrl to return the extracted key
@@ -85,10 +92,10 @@ describe('S3StaticFileImpl', () => {
 
         expect(fileService.getKeyFromFullUrl).toHaveBeenCalledWith(fullUrl);
         expect(result).toBe('https://presigned.example.com/test.jpg');
-        config.S3_SET_ACL = true;
+        config.S3_PUBLIC_DOMAIN = 'https://example.com';
       });
 
-      it('should handle full URL input by extracting key (S3_SET_ACL=true)', async () => {
+      it('should handle full URL input by extracting key (S3_PUBLIC_DOMAIN set)', async () => {
         const fullUrl = 'https://s3.example.com/bucket/path/to/file.jpg';
 
         vi.spyOn(fileService, 'getKeyFromFullUrl').mockResolvedValue('path/to/file.jpg');

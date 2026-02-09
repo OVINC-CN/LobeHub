@@ -68,9 +68,9 @@ export const GET = async (_req: Request, segmentData: { params: Params }) => {
     // Create file service with file owner's userId
     const fileService = new FileService(db, file.userId);
 
-    // Web: Generate S3 presigned URL (5 minutes expiry)
-    const redirectUrl = await fileService.createPreSignedUrlForPreview(file.url, 300);
-    log('Web S3 presigned URL generated (expires in 5 min)');
+    // Web: Generate file URL (public domain URL or S3 presigned URL based on config)
+    const redirectUrl = await fileService.getFullFileUrl(file.url, 300);
+    log('File URL generated for redirect');
 
     // Cache the presigned URL in Redis
     if (redisClient) {

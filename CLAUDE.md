@@ -81,3 +81,9 @@ cd packages/database && bunx vitest run --silent='passed-only' '[file]'
 ## Skills (Auto-loaded by Claude)
 
 Claude Code automatically loads relevant skills from `.agents/skills/`.
+
+## Changelog
+
+- After each code change, append a summary to `CHANGELOG_EXTRA.md` under the current alpha version section
+- Follow the existing format: `- **scope**: description`
+- Group entries under appropriate emoji headers (`🐛 Bug 修复`, `✨ 新特性`, `♻ 重构`, `🗑 移除` etc.)

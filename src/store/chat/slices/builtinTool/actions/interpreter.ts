@@ -71,11 +71,11 @@ export const codeInterpreterSlice: StateCreator<
       const files: File[] = [];
       for (const message of dbMessageSelectors.dbUserMessages(get())) {
         for (const file of message.fileList ?? []) {
-          const blob = await fetch(file.url).then((res) => res.blob());
+          const blob = await fetch(file.url, { credentials: 'include' }).then((res) => res.blob());
           files.push(new File([blob], file.name));
         }
         for (const image of message.imageList ?? []) {
-          const blob = await fetch(image.url).then((res) => res.blob());
+          const blob = await fetch(image.url, { credentials: 'include' }).then((res) => res.blob());
           files.push(new File([blob], image.alt));
         }
         for (const tool of message.tools ?? []) {
@@ -85,7 +85,7 @@ export const codeInterpreterSlice: StateCreator<
               const content = JSON.parse(message.content) as CodeInterpreterResponse;
               for (const file of content.files ?? []) {
                 const item = await fileService.getFile(file.fileId!);
-                const blob = await fetch(item.url).then((res) => res.blob());
+                const blob = await fetch(item.url, { credentials: 'include' }).then((res) => res.blob());
                 files.push(new File([blob], file.filename));
               }
             }
