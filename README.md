@@ -1,7 +1,3 @@
-> [!WARNING]
-> This is a **forked repository** and is **not officially maintained** by the LobeHub team.  
-> It may contain custom modifications that differ from the upstream project. Use at your own discretion.
-
 <div align="center"><a name="readme-top"></a>
 
 [![][image-banner]][vercel-link]
@@ -12,9 +8,13 @@ LobeHub is the ultimate space for work and life: <br/>
 to find, build, and collaborate with agent teammates that grow with you.<br/>
 We're building the world's largest human–agent co-evolving network.
 
+**English** · [简体中文](./README.zh-CN.md)
+
 </div>
 
----
+> [!WARNING]
+> This is a **forked repository** and is **not officially maintained** by the LobeHub team.
+> It may contain custom modifications that differ from the upstream project. Use at your own discretion.
 
 ## Changelog
 
