@@ -258,7 +258,6 @@ export const agentGroupRouter = router({
       }
     }),
 
-  
   /**
    * Fork an agent group
    * POST /market/agent-group/:identifier/fork
@@ -336,12 +335,11 @@ forkAgentGroup: agentGroupProcedure
       }
     }),
 
-  
   /**
    * Get agent group detail by identifier
    * GET /market/agent-group/:identifier
    */
-getAgentGroupDetail: agentGroupProcedure
+  getAgentGroupDetail: agentGroupProcedure
     .input(z.object({ identifier: z.string() }))
     .query(async ({ input, ctx }) => {
       log('getAgentGroupDetail input: %O', input);

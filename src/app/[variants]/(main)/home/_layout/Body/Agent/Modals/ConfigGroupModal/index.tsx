@@ -10,8 +10,7 @@ import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
 
 import GroupItem from './GroupItem';
-
-type GroupSortItem = { id: string; name: string; sort: number | null };
+import { SessionGroupItemBase } from '@/types/session';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
@@ -53,10 +52,10 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
       <Flexbox>
         <SortableList
           items={sessionGroupItems}
-          onChange={(items: GroupSortItem[]) => {
+          onChange={(items: SessionGroupItemBase[]) => {
             updateGroupSort(items);
           }}
-          renderItem={(item: GroupSortItem) => (
+          renderItem={(item: SessionGroupItemBase) => (
             <SortableList.Item
               align={'center'}
               className={styles.container}

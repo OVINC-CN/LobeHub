@@ -6,6 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useHomeStore } from '@/store/home';
+import type { SessionGroupItemBase } from '@/types/session';
 
 const styles = createStaticStyles(({ css }) => ({
   content: css`
@@ -21,7 +22,7 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-const GroupItem = memo<{ id: string; name: string }>(({ id, name }) => {
+const GroupItem = memo<SessionGroupItemBase>(({ id, name }) => {
   const { t } = useTranslation('chat');
   const { message, modal } = App.useApp();
 
