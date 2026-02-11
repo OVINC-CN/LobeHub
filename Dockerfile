@@ -150,7 +150,7 @@ RUN set -e && \
     mkdir -p /deps && \
     cd /deps && \
     pnpm init && \
-    pnpm add pg drizzle-orm @napi-rs/canvas
+    pnpm add pg drizzle-orm
 
 COPY . .
 
@@ -188,7 +188,6 @@ COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
 COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 COPY --from=builder /deps/node_modules/pg /app/node_modules/pg
 COPY --from=builder /deps/node_modules/drizzle-orm /app/node_modules/drizzle-orm
-COPY --from=builder /deps/node_modules/@napi-rs /app/node_modules/@napi-rs
 
 # Copy server launcher and shared scripts
 COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
