@@ -29,4 +29,10 @@ export const {
     // Always include magicLinkClient - server will reject if not enabled
     magicLinkClient(),
   ],
+  sessionOptions: {
+    // Disable proactive session refetch on window focus.
+    // Session validity is checked via cookie on actual API requests (TRPC),
+    // and 401 responses are handled by the TRPC error link.
+    refetchOnWindowFocus: false,
+  },
 });

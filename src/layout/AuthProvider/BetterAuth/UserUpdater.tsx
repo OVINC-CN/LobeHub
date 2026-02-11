@@ -14,7 +14,12 @@ const UserUpdater = memo(() => {
   const { data: session, isPending, error } = useSession();
 
   const isLoaded = !isPending;
-  const isSignedIn = !!session?.user && !error;
+  // When useSession() returns an error (e.g. network failure), preserve the existing
+  // login state instead of clearing it. Real auth failures (401) are handled by the
+  // TRPC error link which triggers logout explicitly.
+  const isSignedIn = error
+    ? useUserStore.getState().isSignedIn
+    : !!session?.user;
 
   const betterAuthUser = session?.user;
   const useStoreUpdater = createStoreUpdater(useUserStore);
@@ -41,8 +46,11 @@ const UserUpdater = memo(() => {
       return;
     }
 
-    // Clear user data when session becomes unavailable
-    useUserStore.setState({ user: undefined });
+    // Only clear user data when session explicitly has no user (not on fetch errors).
+    // Fetch errors (network issues) should not discard the cached user.
+    if (!error) {
+      useUserStore.setState({ user: undefined });
+    }
   }, [betterAuthUser]);
 
   return null;

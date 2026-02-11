@@ -1,5 +1,14 @@
 # Changelog
 
+### Version 2.1.23-alpha.3
+
+<sup>Released on **2026-02-11**</sup>
+
+#### 🐛 Bug 修复
+
+- **auth**: 修复断网后 Better-Auth session 检查失败导致页面跳转到根路径的问题，网络错误时保持现有登录状态。
+- **auth**: 关闭 `useSession()` 的 `refetchOnWindowFocus`，session 验证跟随实际 API 请求而非主动轮询。
+
 ### Version 2.1.23-alpha.2
 
 <sup>Released on **2026-02-09**</sup>
