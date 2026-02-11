@@ -1,15 +1,12 @@
 'use client';
 
-import { BRANDING_EMAIL, SOCIAL_URL } from '@lobechat/business-const';
-import { useAnalytics } from '@lobehub/analytics/react';
 import { type MenuProps } from '@lobehub/ui';
 import { ActionIcon, DropdownMenu, Flexbox, Icon } from '@lobehub/ui';
-import { DiscordIcon } from '@lobehub/ui/icons';
 import {
   CircleHelp,
   FlaskConical,
 } from 'lucide-react';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LabsModal from '@/components/LabsModal';
